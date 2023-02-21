@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <h1>Image Tester</h1>
+    <div>
+        <h2>GET: </h2>
+        <input type="text" placeholder="path..." id="value-get">
+        <button id="send-get">send</button>
+    </div>
+    <div>
+        <h2>POST: </h2>
+        <input type="file" id="value-post" name="file">
+        <button id="send-post">send</button>
+    </div>
+    <div>
+        <h2>DELETE: </h2>
+        <input type="text" placeholder="path..." id="value-delete">
+        <button id="send-delete">send</button>
+    </div>
+
+    <script lang="">
+        document.querySelector("#send-get").addEventListener("click", () => {
+            fetch("http://127.0.0.1:8787", {
+                method: "GET"
+            }).then((response) => {
+                response.json().then((result) => {
+                    console.log("get result: ", result);
+                })
+            })
+        });
+
+        document.querySelector("#send-post").addEventListener("click", () => {
+            const file = document.querySelector("#value-post").files[0]
+            if(file) {
+                (async () => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function(event) {
+                        const img = event.target.result;
+                        const form = new FormData();
+                        form.append("file", file);
+                        
+                        fetch("http://127.0.0.1:8787", {
+                            method: "POST",
+                        }).then((response) => {
+                            console.log(response);
+                            response.json().then((result) => {
+                                console.log("got result: ", result);
+                                fetch(result.result.uploadURL, {
+                                    method: "POST",
+                                    'Content-Type': 'multipart/form-data; boundary=---011000010111000001101001',
+                                    body: form
+                                })
+                            })
+                        })
+                    }
+                })()
+            }
+        });
+    </script>
+</html>
