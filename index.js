@@ -6,6 +6,9 @@ export default {
   },
 };
 
+const ACCOUNT_ID = ""
+const API_TOKEN = ""
+
 export const corsHeaders = {
   "Access-Control-Allow-Headers": "*",
   "Access-Control-Allow-Methods": "GET POST DELETE",
@@ -19,21 +22,12 @@ async function handleRequest(request) {
     });
   } else if (request.method === "GET") {
     //const value = await HELLOS.get("num");
-    
-    return new Response("hi", { status: 200, headers: corsHeaders });
-  } else if (request.method == "POST") {
-    //const value = await HELLOS.get("num");
-    const form = new FormData();
-    form.append("metadata", '{"key":"value"}');
-    form.append("requireSignedURLs", "false");
-    form.append("url", "https://image.png");
-    form.forEach((a) => { console.log(a)});
     const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/images/v2/direct_upload`, {
       method: 'POST',
       headers: {
         ...corsHeaders,
         "Authorization": `Bearer ${API_TOKEN}`,
-        "X-Auth-Email": "timmy0x@proton.me"
+        "X-Auth-Email": ""
       },
     });
     const result = await response.text();
